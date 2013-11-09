@@ -7,8 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using Microsoft.Phone.Controls;
-using panes.Resources;
 
 namespace panes
 {
@@ -26,6 +24,11 @@ namespace panes
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri(@"/Page1.xaml", UriKind.Relative));
+        }
+
+        private void PlayCreate_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri(@"/CreatePage.xaml", UriKind.Relative));
         }
 
 

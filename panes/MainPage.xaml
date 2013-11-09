@@ -56,7 +56,7 @@
                     </Button>
                 </ListBoxItem>
                 <ListBoxItem x:Name="ListItemCreate">
-                    <Button x:Name="PlayCreate" Width="250" Background="Purple" Height="100" HorizontalContentAlignment="Left">
+                    <Button x:Name="PlayCreate" Width="250" Background="Purple" Height="100" HorizontalContentAlignment="Left" Click="PlayCreate_Click">
                         <TextBlock Text="create" TextAlignment="Center" FontSize="40"/>
                     </Button>
                 </ListBoxItem>
