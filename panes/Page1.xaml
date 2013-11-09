@@ -38,10 +38,10 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="Undo" Grid.Column="0" Height="76">
+            <Button x:Name="Undo" Grid.Column="0" Height="76" Click="Undo_Click">
                 <TextBlock Text="undo"/>
             </Button>
-            <Button x:Name="restart" Grid.Column="1" Height="76">
+            <Button x:Name="restart" Grid.Column="1" Height="76" Click="restart_Click">
                 <TextBlock Text="restart"/>
             </Button>
 
@@ -57,7 +57,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Rectangle Fill="Green" Grid.Row="0" Grid.Column="0" Margin="1 1 1 1" RadiusX="100" RadiusY="100"/>
+                <Rectangle Fill="Green" Grid.Row="0" Grid.Column="0" Margin="0 1 1 1" RadiusX="100" RadiusY="100"/>
                 
 
             </Grid>
