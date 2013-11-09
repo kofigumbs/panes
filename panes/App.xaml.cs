@@ -1,12 +1,12 @@
-﻿using System;
-using System.Diagnostics;
-using System.Resources;
-using System.Windows;
-using System.Windows.Markup;
-using System.Windows.Navigation;
-using Microsoft.Phone.Controls;
+﻿using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using panes.Resources;
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Markup;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 
 namespace panes
 {
@@ -17,6 +17,9 @@ namespace panes
         /// </summary>
         /// <returns>The root frame of the Phone Application.</returns>
         public static PhoneApplicationFrame RootFrame { get; private set; }
+
+        //Global variables for the WriteableBitmap objects used throughout the application.
+        public static WriteableBitmap CapturedImage;
 
         /// <summary>
         /// Constructor for the Application object.
