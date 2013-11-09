@@ -42,7 +42,7 @@
                 <TextBlock Text="undo"/>
             </Button>
             <Button x:Name="restart" Grid.Column="1" Height="76" Click="restart_Click">
-                <TextBlock Text="restart"/>
+                <TextBlock Text="menu"/>
             </Button>
 
             <Grid x:Name="Target" Height="100" Grid.Column="2" HorizontalAlignment="Center" Width="100">

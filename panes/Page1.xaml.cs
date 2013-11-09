@@ -29,7 +29,7 @@ namespace panes
         Color[] colorCircle;
 
         Rectangle[,] startBoard = new Rectangle[ROWSIZE, COLSIZE];
-        Rectangle[,] board = new Rectangle[ROWSIZE,COLSIZE];
+        Rectangle[,] board = new Rectangle[ROWSIZE, COLSIZE];
         Rectangle[,] solution = new Rectangle[ROWSIZE, COLSIZE];
 
         private Rectangle source;
@@ -58,7 +58,7 @@ namespace panes
                 for (int col = 0; col < COLSIZE; col++)
                 {
                     var a = new Rectangle();
-                    a.Fill = new SolidColorBrush(colorCircle[(int)rand.Next(0,5)]);
+                    a.Fill = new SolidColorBrush(colorCircle[(int)rand.Next(0, 5)]);
                     a.Height = r.Height;
                     a.Width = r.Width;
                     a.Margin = r.Margin;
@@ -66,11 +66,10 @@ namespace panes
                     a.RadiusY = r.RadiusY;
                     Grid.SetRow(a, row);
                     Grid.SetColumn(a, col);
-                    startBoard[row, col] = (Rectangle)a;
+                    board[row, col] = (Rectangle)a;
                     playingfield.Children.Add(a);
                 }
             }
-            board = startBoard;
             solution = makeSolution(board, 3);
             Grid tarsolution = ((System.Windows.Controls.Grid)(this.FindName("Target")));
             UIElementCollection t = tarsolution.Children;
@@ -78,7 +77,7 @@ namespace panes
             {
                 for (int col = 0; col < COLSIZE; col++)
                 {
-                    Rectangle orig = solution[row,col];
+                    Rectangle orig = solution[row, col];
                     var a = new Rectangle();
                     a.Fill = orig.Fill;
                     a.Height = orig.Height;
@@ -107,11 +106,11 @@ namespace panes
                 sourcePicked = false;
                 source.Fill = new SolidColorBrush(sourceColor);
                 Color destColor = ((SolidColorBrush)dest.Fill).Color;
-                
+
                 oldColor = destColor;
                 SetLastMoveIndex(dest);
                 dest.Fill = new SolidColorBrush(ChangeColor(sourceColor, destColor));
-                if(isSolved())
+                if (isSolved())
                     NavigationService.Navigate(new Uri(@"/MainPage.xaml", UriKind.Relative));
             }
         }
@@ -119,17 +118,12 @@ namespace panes
         private void SetLastMoveIndex(Rectangle r)
         {
             for (int i = 0; i < ROWSIZE; i++)
-            {
-
                 for (int j = 0; j < COLSIZE; j++)
-                {
                     if (r == board[i, j])
                     {
                         lastMove.X = i;
                         lastMove.Y = j;
                     }
-                }
-            }
         }
 
         private Color ChangeColor(Color from, Color to)
@@ -163,7 +157,7 @@ namespace panes
                 return colorCircle[(fromIndex + toIndex) / 2];
         }
 
-        private Rectangle[,] makeSolution(Rectangle[,] b,int moves)
+        private Rectangle[,] makeSolution(Rectangle[,] b, int moves)
         {
             Rectangle[,] soln = new Rectangle[3, 3];
             for (int r = 0; r < ROWSIZE; r++)
@@ -217,14 +211,7 @@ namespace panes
 
         private void restart_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < ROWSIZE; i++)
-            {
-                for (int j = 0; j < COLSIZE; j++)
-                {
-
-                    board[i, j].Fill = new SolidColorBrush(((SolidColorBrush)startBoard[i, j].Fill).Color);
-                }
-            }
+            NavigationService.Navigate(new Uri(@"/MainPage.xaml", UriKind.Relative));
         }
 
         private void Undo_Click(object sender, RoutedEventArgs e)
