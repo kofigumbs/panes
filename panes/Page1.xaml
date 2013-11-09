@@ -45,7 +45,7 @@
                 <TextBlock Text="restart"/>
             </Button>
 
-            <Grid x:Name="Target" Height="100" Grid.Column="2" HorizontalAlignment="Right" Width="100">
+            <Grid x:Name="Target" Height="100" Grid.Column="2" HorizontalAlignment="Center" Width="100">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
@@ -81,14 +81,6 @@
             </Grid.ColumnDefinitions>
             
             <Rectangle Fill="Green" Grid.Row="0" Grid.Column="0" Margin="10 10 10 10" RadiusX="100" RadiusY="100"/>
-            <Rectangle Fill="Red" Grid.Row="0" Grid.Column="1" Margin="10 10 10 10" RadiusX="100" RadiusY="100"/>
-            <Rectangle Fill="Orange" Grid.Row="0" Grid.Column="2" Margin="10 10 10 10" RadiusX="100" RadiusY="100"/>
-            <Rectangle Fill="Yellow" Grid.Row="1" Grid.Column="0" Margin="10 10 10 10" RadiusX="100" RadiusY="100"/>
-            <Rectangle Fill="Blue" Grid.Row="1" Grid.Column="1" Margin="10 10 10 10" RadiusX="100" RadiusY="100"/>
-            <Rectangle Fill="White" Grid.Row="1" Grid.Column="2" Margin="10 10 10 10" RadiusX="100" RadiusY="100"/>
-            <Rectangle Fill="Purple" Grid.Row="2" Grid.Column="0" Margin="10 10 10 10" RadiusX="100" RadiusY="100"/>
-            <Rectangle Fill="Green" Grid.Row="2" Grid.Column="1" Margin="10 10 10 10" RadiusX="100" RadiusY="100"/>
-            <Rectangle Fill="Orange" Grid.Row="2" Grid.Column="2" Margin="10 10 10 10" RadiusX="100" RadiusY="100"/>
             
         </Grid>
         

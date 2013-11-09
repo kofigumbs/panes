@@ -23,7 +23,13 @@ namespace panes
         private Color BLUE = Color.FromArgb(255, 0, 0, 255);
         private Color PURPLE = Color.FromArgb(255, 128, 0, 128);
 
+        private const int ROWSIZE = 3;
+        private const int COLSIZE = 3;
+
         Color[] colorCircle;
+
+        Rectangle[,] board = new Rectangle[ROWSIZE,COLSIZE];
+        Rectangle[,] solution = new Rectangle[ROWSIZE, COLSIZE];
 
         private Rectangle source;
         private Color sourceColor;
@@ -42,6 +48,44 @@ namespace panes
             InitializeComponent();
             Grid playingfield = ((System.Windows.Controls.Grid)(this.FindName("PlayingField")));
             UIElementCollection rd = playingfield.Children;
+            Rectangle r = (Rectangle)rd[0];
+            Random rand = new Random();
+            for (int row = 0; row < ROWSIZE; row++)
+            {
+                for (int col = 0; col < COLSIZE; col++)
+                {
+                    var a = new Rectangle();
+                    a.Fill = new SolidColorBrush(colorCircle[(int)rand.Next(0,5)]);
+                    a.Height = r.Height;
+                    a.Width = r.Width;
+                    a.Margin = r.Margin;
+                    a.RadiusX = r.RadiusX;
+                    a.RadiusY = r.RadiusY;
+                    Grid.SetRow(a, row);
+                    Grid.SetColumn(a, col);
+                    board[row, col] = (Rectangle)a;
+                    playingfield.Children.Add(a);
+                }
+            }
+            solution = makeSolution(board, 3);
+            Grid tarsolution = ((System.Windows.Controls.Grid)(this.FindName("Target")));
+            UIElementCollection t = tarsolution.Children;
+            for (int row = 0; row < ROWSIZE; row++)
+            {
+                for (int col = 0; col < COLSIZE; col++)
+                {
+                    Rectangle orig = solution[row,col];
+                    var a = new Rectangle();
+                    a.Fill = orig.Fill;
+                    a.Height = orig.Height;
+                    a.Width = orig.Width;
+                    a.RadiusX = orig.RadiusX;
+                    a.RadiusY = orig.RadiusY;
+                    Grid.SetRow(a, row);
+                    Grid.SetColumn(a, col);
+                    tarsolution.Children.Add(a);
+                }
+            }
         }
 
         private void GestureListener_Tap(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
@@ -94,25 +138,52 @@ namespace panes
                 return colorCircle[(fromIndex + toIndex) / 2];
         }
 
-        public class MyColor
+        private Rectangle[,] makeSolution(Rectangle[,] b,int moves)
         {
-            public Color c;
-            public Color blendLeft;
-            public Color left;
-            public Color opposite;
-            public Color right;
-            public Color blendRight;
-
-            public MyColor(Color[] v)
-            { 
-                c = v[0]; 
-                blendLeft = v[1]; 
-                left = v[2]; 
-                opposite = v[3]; 
-                right = v[4]; 
-                blendRight = v[5]; 
+            Rectangle[,] soln = new Rectangle[3, 3];
+            for (int r = 0; r < ROWSIZE; r++)
+            {
+                for (int c = 0; c < COLSIZE; c++)
+                {
+                    soln[r, c] = new Rectangle();
+                    soln[r, c].Fill = b[r, c].Fill;
+                    soln[r, c].Height = b[r, c].Height;
+                    soln[r, c].Width = b[r, c].Width;
+                    soln[r, c].RadiusX = b[r, c].RadiusX;
+                    soln[r, c].RadiusY = b[r, c].RadiusY;
+                }
             }
+            Random rand = new Random();
+            for (; moves > 0; moves--)
+            {
+                int r = rand.Next(0, 2), c = rand.Next(0, 2);
+                int tr = r, tc = c;
+                if (rand.Next(0, 1) == 0)
+                {
+                    if (tc + 1 < 3)
+                        tc += 1;
+                    else
+                        tc -= 1;
+                }
+                else
+                {
+                    if (tr + 1 < 3)
+                        tr += 1;
+                    else
+                        tr -= 1;
+                }
+                soln[tr, tc].Fill = new SolidColorBrush(ChangeColor(((SolidColorBrush)soln[r, c].Fill).Color, ((SolidColorBrush)soln[tr, tc].Fill).Color));
+            }
+            return soln;
         }
 
+        private bool isSolved()
+        {
+            for (int row = 0; row < 3; row++)
+                for (int col = 0; col < 3; col++)
+                    if (board[row, col].Fill != solution[row, col].Fill)
+                        return false;
+            return true;
+        }
     }
 }
