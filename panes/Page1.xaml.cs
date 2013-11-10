@@ -23,8 +23,8 @@ namespace panes
         private Color BLUE = Color.FromArgb(255, 0, 0, 255);
         private Color PURPLE = Color.FromArgb(255, 128, 0, 128);
 
-        private const int ROWSIZE = 3;
-        private const int COLSIZE = 3;
+        private const int ROWSIZE = 4;
+        private const int COLSIZE = 4;
 
         Color[] colorCircle;
 
@@ -35,6 +35,7 @@ namespace panes
         private Rectangle source;
         private Color sourceColor;
         private bool sourcePicked = false;
+        private Point sourcePoint;
 
         private Point lastMove = new Point(0, 0);
         private Color oldColor = new Color();
@@ -58,7 +59,7 @@ namespace panes
                 for (int col = 0; col < COLSIZE; col++)
                 {
                     var a = new Rectangle();
-                    a.Fill = new SolidColorBrush(colorCircle[(int)rand.Next(0, 5)]);
+                    a.Fill = new SolidColorBrush(colorCircle[2*rand.Next(0, 3)]);
                     a.Height = r.Height;
                     a.Width = r.Width;
                     a.Margin = r.Margin;
@@ -70,7 +71,7 @@ namespace panes
                     playingfield.Children.Add(a);
                 }
             }
-            solution = makeSolution(board, 3);
+            solution = makeSolution(board, 10);
             Grid tarsolution = ((System.Windows.Controls.Grid)(this.FindName("Target")));
             UIElementCollection t = tarsolution.Children;
             for (int row = 0; row < ROWSIZE; row++)
@@ -93,12 +94,13 @@ namespace panes
 
         private void GestureListener_Tap(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
         {
-            if (!sourcePicked) //first tap (select the source color0
+            if (!sourcePicked) //first tap (select the source color)
             {
                 sourcePicked = true;
                 source = (Rectangle)e.OriginalSource;
                 sourceColor = ((SolidColorBrush)source.Fill).Color;
-                source.Fill = new RadialGradientBrush(sourceColor, Color.FromArgb((byte)(sourceColor.A - 50), sourceColor.R, sourceColor.G, sourceColor.B));
+                sourcePoint = GetCoordsOfRect(source);
+                source.Fill = new RadialGradientBrush(sourceColor, Color.FromArgb((byte)(sourceColor.A - 75), sourceColor.R, sourceColor.G, sourceColor.B));
             }
             else// second tap (change the destination rectangle)
             {
@@ -106,12 +108,19 @@ namespace panes
                 sourcePicked = false;
                 source.Fill = new SolidColorBrush(sourceColor);
                 Color destColor = ((SolidColorBrush)dest.Fill).Color;
+                Point destPoint = GetCoordsOfRect(dest);
 
-                oldColor = destColor;
-                SetLastMoveIndex(dest);
-                dest.Fill = new SolidColorBrush(ChangeColor(sourceColor, destColor));
-                if (isSolved())
-                    NavigationService.Navigate(new Uri(@"/MainPage.xaml", UriKind.Relative));
+                bool isWithinOne = (sourcePoint.X == destPoint.X && (Math.Abs(sourcePoint.Y - destPoint.Y) == 1))
+                    || (sourcePoint.Y == destPoint.Y && (Math.Abs(sourcePoint.X - destPoint.X) == 1));
+
+                if (isWithinOne)
+                {
+                    oldColor = destColor;
+                    SetLastMoveIndex(dest);
+                    dest.Fill = new SolidColorBrush(ChangeColor(sourceColor, destColor));
+                    if (isSolved())
+                        NavigationService.Navigate(new Uri(@"/MainPage.xaml", UriKind.Relative));
+                }
             }
         }
 
@@ -157,9 +166,19 @@ namespace panes
                 return colorCircle[(fromIndex + toIndex) / 2];
         }
 
+
+        private Point GetCoordsOfRect(Rectangle r)
+        {
+            for (int i = 0; i < ROWSIZE; i++)
+                for (int j = 0; j < COLSIZE; j++)
+                    if (r == board[i, j])
+                        return new Point(i, j);
+            return new Point(-1, -1); ;
+        }
+
         private Rectangle[,] makeSolution(Rectangle[,] b, int moves)
         {
-            Rectangle[,] soln = new Rectangle[3, 3];
+            Rectangle[,] soln = new Rectangle[ROWSIZE, COLSIZE];
             for (int r = 0; r < ROWSIZE; r++)
             {
                 for (int c = 0; c < COLSIZE; c++)

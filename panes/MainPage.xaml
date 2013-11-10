@@ -60,9 +60,9 @@
                         <TextBlock Text="create" TextAlignment="Center" FontSize="40"/>
                     </Button>
                 </ListBoxItem>
-                <ListBoxItem x:Name="ListItemAbout">
-                    <Button x:Name="About" Width="200" Background="Orange" Height="100" HorizontalContentAlignment="Left">
-                        <TextBlock Text="about" TextAlignment="Center" FontSize="40"/>
+                <ListBoxItem x:Name="ListItemInstructions">
+                    <Button x:Name="PlayInstructions" Width="350" Background="Orange" Height="100" HorizontalContentAlignment="Left" Click="PlayInstructions_Click">
+                        <TextBlock Text="instructions" TextAlignment="Center" FontSize="40"/>
                     </Button>
                 </ListBoxItem>
             </ListBox>

@@ -7,11 +7,16 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Microsoft.Phone;
+using Microsoft.Phone.Tasks;
 
 namespace panes
 {
     public partial class MainPage : PhoneApplicationPage
     {
+
+        CameraCaptureTask ctask;
+
         // Constructor
         public MainPage()
         {
@@ -28,7 +33,29 @@ namespace panes
 
         private void PlayCreate_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Uri(@"/CreatePage.xaml", UriKind.Relative));
+            //Create new instance of CameraCaptureClass
+           ctask = new CameraCaptureTask();
+
+            //Create new event handler for capturing a photo
+            ctask.Completed += new EventHandler<PhotoResult>(ctask_Completed);
+            ctask.Show();
+        }
+
+        void ctask_Completed(object sender, PhotoResult e)
+        {
+
+            if (e.TaskResult == TaskResult.OK && e.ChosenPhoto != null)
+            {
+                // TODO: Send photo to Page1
+                System.Diagnostics.Debug.WriteLine(e.ChosenPhoto);
+                NavigationService.Navigate(new Uri(@"/Page1.xaml", UriKind.Relative));
+
+            }
+        }
+
+        private void PlayInstructions_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri(@"/InstructionsPage.xaml", UriKind.Relative));
         }
 
 
