@@ -17,14 +17,16 @@ namespace panes
     {
         private Color WHITE = Color.FromArgb(255, 255, 255, 255);
         private Color RED = Color.FromArgb(255, 255, 0, 0);
-        private Color ORANGE = Color.FromArgb(255, 255, 165, 0);
+        private Color ORANGE = Color.FromArgb(255, 255, 125, 0);
         private Color YELLOW = Color.FromArgb(255, 255, 255, 0);
         private Color GREEN = Color.FromArgb(255, 0, 128, 0);
         private Color BLUE = Color.FromArgb(255, 0, 0, 255);
         private Color PURPLE = Color.FromArgb(255, 128, 0, 128);
 
-        private const int ROWSIZE = 4;
-        private const int COLSIZE = 4;
+        private const int ROWSIZE = 3;
+        private const int COLSIZE = 3;
+        private Random rand = new Random();
+
 
         Color[] colorCircle;
 
@@ -37,8 +39,20 @@ namespace panes
         private bool sourcePicked = false;
         private Point sourcePoint;
 
-        private Point lastMove = new Point(0, 0);
-        private Color oldColor = new Color();
+        internal class Tuple
+        {
+            public Point p;
+            public Color c;
+
+            public Tuple(Point p1, Color c1)
+            {
+                p = p1;
+                c = c1;
+            }
+        }
+
+        Stack<Tuple> lastMoves = new Stack<Tuple>();
+
         public Page1()
         {
             colorCircle = new Color[6]{
@@ -53,7 +67,6 @@ namespace panes
             Grid playingfield = ((System.Windows.Controls.Grid)(this.FindName("PlayingField")));
             UIElementCollection rd = playingfield.Children;
             Rectangle r = (Rectangle)rd[0];
-            Random rand = new Random();
             for (int row = 0; row < ROWSIZE; row++)
             {
                 for (int col = 0; col < COLSIZE; col++)
@@ -115,8 +128,7 @@ namespace panes
 
                 if (isWithinOne)
                 {
-                    oldColor = destColor;
-                    SetLastMoveIndex(dest);
+                    PushLastMove(dest,destColor);
                     dest.Fill = new SolidColorBrush(ChangeColor(sourceColor, destColor));
                     if (isSolved())
                         NavigationService.Navigate(new Uri(@"/MainPage.xaml", UriKind.Relative));
@@ -124,15 +136,17 @@ namespace panes
             }
         }
 
-        private void SetLastMoveIndex(Rectangle r)
+        private void PushLastMove(Rectangle r,Color c)
         {
+            Point temp = new Point();
             for (int i = 0; i < ROWSIZE; i++)
                 for (int j = 0; j < COLSIZE; j++)
                     if (r == board[i, j])
                     {
-                        lastMove.X = i;
-                        lastMove.Y = j;
+                        temp.X = i;
+                        temp.Y = j;
                     }
+            lastMoves.Push(new Tuple(temp,c));
         }
 
         private Color ChangeColor(Color from, Color to)
@@ -179,6 +193,28 @@ namespace panes
         private Rectangle[,] makeSolution(Rectangle[,] b, int moves)
         {
             Rectangle[,] soln = new Rectangle[ROWSIZE, COLSIZE];
+            Grid playingfield = ((System.Windows.Controls.Grid)(this.FindName("PlayingField")));
+            UIElementCollection rd = playingfield.Children;
+            Rectangle r = (Rectangle)rd[0];
+            for (int row = 0; row < ROWSIZE; row++)
+            {
+                for (int col = 0; col < COLSIZE; col++)
+                {
+                    var a = new Rectangle();
+                    a.Fill = new SolidColorBrush(colorCircle[2 * rand.Next(0, 3) + 1]);
+                    a.Height = r.Height;
+                    a.Width = r.Width;
+                    a.Margin = r.Margin;
+                    a.RadiusX = r.RadiusX;
+                    a.RadiusY = r.RadiusY;
+                    Grid.SetRow(a, row);
+                    Grid.SetColumn(a, col);
+                    soln[row, col] = (Rectangle)a;
+                }
+            }
+            return soln;
+            /*
+            Rectangle[,] soln = new Rectangle[ROWSIZE, COLSIZE];
             for (int r = 0; r < ROWSIZE; r++)
             {
                 for (int c = 0; c < COLSIZE; c++)
@@ -212,7 +248,8 @@ namespace panes
                 }
                 soln[tr, tc].Fill = new SolidColorBrush(ChangeColor(((SolidColorBrush)soln[r, c].Fill).Color, ((SolidColorBrush)soln[tr, tc].Fill).Color));
             }
-            return soln;
+            return soln;*/
+
         }
 
         private bool isSolved()
@@ -235,7 +272,11 @@ namespace panes
 
         private void Undo_Click(object sender, RoutedEventArgs e)
         {
-            board[(int)lastMove.X, (int)lastMove.Y].Fill = new SolidColorBrush(oldColor);
+            if (lastMoves.Count != 0)
+            {
+                Tuple t = lastMoves.Pop();
+                board[(int)t.p.X, (int)t.p.Y].Fill = new SolidColorBrush(t.c);
+            }
         }
     }
 }
