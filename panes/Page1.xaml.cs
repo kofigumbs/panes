@@ -254,8 +254,8 @@ namespace panes
 
         private bool isSolved()
         {
-            for (int row = 0; row < 3; row++)
-                for (int col = 0; col < 3; col++)
+            for (int row = 0; row < ROWSIZE; row++)
+                for (int col = 0; col < COLSIZE; col++)
                 {
                     Color bcolor = ((SolidColorBrush)board[row, col].Fill).Color;
                     Color scolor = ((SolidColorBrush)solution[row, col].Fill).Color;
@@ -267,7 +267,13 @@ namespace panes
 
         private void restart_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Uri(@"/MainPage.xaml", UriKind.Relative));
+            //NavigationService.Navigate(new Uri(@"/MainPage.xaml", UriKind.Relative));
+            while (lastMoves.Count != 0)
+            {
+                Tuple t = lastMoves.Pop();
+                board[(int)t.p.X, (int)t.p.Y].Fill = new SolidColorBrush(t.c);
+            }
+
         }
 
         private void Undo_Click(object sender, RoutedEventArgs e)
